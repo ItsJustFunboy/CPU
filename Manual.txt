@@ -1,0 +1,70 @@
+CPU Manual.
+
+Section A: General Information
+
+    File extension: .fsm ( Assembly )
+    File extension: .fl ( High Level Language )
+
+    
+
+Section B: Memory
+
+    The CPU has 11 Memory locations.
+
+    Section B1: Main Memory
+
+        The RAM. Size: 64 KiB (-1B) ( Kibibytes, 64*1024-1 Bytes )
+
+            0x0000 .. 0x0400 (0-1 KiB) : System RAM, Video RAM
+            0x0400 .. 0x0800 (1-2 KiB) : Variable RAM
+            0x0800 .. 0xFFFF (2-64 KiB) : General Purpose RAM
+
+        The ROM. Size: 1 KiB ( Kibibytes, 1024 bytes, system only )
+
+    Section B2: Registers
+
+
+Section C: Assembly Language
+
+    Section C1: Insturctions
+
+        0x0000: void NINS {args: None} ~ No instruction
+        0x0001: int ADDI {args: int, int, RegisterToStore} ~ Add ints
+        0x0002: float ADDF {args: float, float, RegisterToStore} ~ Add floats
+        0x0003: bool AND {args: bool A, bool B, RegisterToStore} ~ Logical AND
+        0x0004: void CALL {args: char[] funcName} ~ Call function
+        0x0005: void CMDR {args: None} ~ Clear Memory Data Register
+        0x0006: void CMAR {args: None} ~ Clears Memory Address Register
+        0x0007: void CAC {args: None}  ~ Clears Accumulator
+        0x0008: void CRAM {args: None} ~ Clears all RAM ( Not recommended, shuts down program )
+        0x0009: void RPC {args: None} ~ Reset program counter
+        0x000A: void CGR {args: Register} ~ Clears the specified General Purpose Register
+        0x000B: void VBL {args: string Type, string Name, Memory Address (0x0400 - 0x0800} ~ Declares Variable at location with type and its size. 
+        0x000C: void INCLUDE {args: <lib>, location} ~ Imports library
+        0x000D: bool EQL {args: bool A, bool B, RegisterToStore} ~ Checks if A==B
+        0x000E: bool LST {args: bool A, bool B, RegisterToStore} ~ Checks if A<B
+        0x000F: bool GRT {args: bool A, bool B, RegisterToStore} ~ Checks if A>B
+        0x0010: bool LSTE {args: bool A, bool B, RegisterToStore} ~ Checks if A<=B
+        0x0011: bool GRTE {args: bool A, bool B, RegisterToStore} ~ Checks if A>=B
+        0x0012: void HLT {args: None} ~ Halts the clock
+        0x0013: void RSC {args: None} ~ Stops clock Halt
+        0x0014: void SET {args: %variable, value} ~ Assigns variable with the value
+        0x0015: void JUMP {args: int lineNum} ~ Jumps to line
+        0x0016: void OUT {args: %variable} ~ stdout (variable.value)
+        0x0017: void FUNC {args: returnType, Name, }
+
+    Section C2: Libraries
+
+        <math.fsm> :
+
+
+    Section C3: Syntax
+
+        Comments are declared with a '~'
+        Variables are referenced with a '%'
+        Lines must end in a ';'
+
+        The program always has to start with an entry point, "__start"
+
+        Example code to swap to integers, NumA, NumB: See FILE: <AssemblyExample.fsm>
+

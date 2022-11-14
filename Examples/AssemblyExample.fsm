@@ -1,0 +1,25 @@
+~ Example Program in the assembly language
+~ Function: Swap two numbers, Num1 (=25) and Num2 (=50).
+
+__start
+
+    ~ Add variables: VBL type name address
+
+    VBL int, Num1, 0x400; ~ Num 1
+    VBL int, Num2, 0x432; ~ Num 2
+    VBL int, Num3, 0x474; ~ Extra number for swap
+
+    ~ Initialize them: SET variable value
+
+    SET Num1, 25;
+    SET Num2, 50;
+    SET Num3, 0;
+
+    ~ Print initial values
+
+    OUT Num1;
+    OUT Num2;
+
+    ~ Swap
+
+    SET
