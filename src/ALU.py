@@ -52,233 +52,66 @@ class ALU:
             return 0
     
     def NAND(A: bool, B: bool):
-        return NOT(AND(A, B))
+        return ALU.NOT(ALU.AND(A, B))
 
     def OR(A: bool, B: bool):
-        return NAND(NOT(A), NOT(B))
+        return ALU.NAND(ALU.NOT(A), ALU.NOT(B))
 
     def XOR(A: bool, B: bool):
-        return AND(NAND(A, B), OR(A, B))
+        return ALU.AND(ALU.NAND(A, B), OR(A, B))
 
     def NOR(A: bool, B: bool):
-        return NOT(OR(A, B))
+        return ALU.NOT(ALU.OR(A, B))
 
 
     def XNOR(A: bool, B: bool):
-        return NOT(XOR(A, B))
+        return ALU.NOT(ALU.XOR(A, B))
 
 
     # Basic Math
 
-    # ADD 
+    # ADD
 
-    def HalfAdd(A: bit, B: bit):
+    def Add16(A: BY.byte, B: BY.byte, carryIn: bool):
 
-        sum = XOR(A.state, B.state)
-        carry = AND(A.state, B.state)
+        # CARRY = o1p
+        # SUM = x2p
 
-        returnedByte: BY.byte
+        x1a: bool = ALU.XOR(A.T1.state, B.T1.state);
+        a1a: bool = ALU.AND(A.T1.state, B.T1.state);
+        x2a: bool = ALU.XOR(x1a, carryIn);
+        a2a: bool = ALU.AND(carryIn, x1a);
+        o1a: bool = ALU.OR(a1a, a2a);
 
-        returnedByte.T1.state = sum
-        returnedByte.CarryOut.state = carry
+        x1b: bool = ALU.XOR(A.T2.state, B.T2.state);
+        a1b: bool = ALU.AND(A.T2.state, B.T2.state);
+        x2b: bool = ALU.XOR(x1b, o1a);
+        a2b: bool = ALU.AND(o1a, x1b);
+        o1b: bool = ALU.OR(a1b, a2b);
 
-        return returnedByte
+        x1c: bool = ALU.XOR(A.T3.state, B.T3.state);
+        a1c: bool = ALU.AND(A.T3.state, B.T3.state);
+        x2c: bool = ALU.XOR(x1c, o1b);
+        a2c: bool = ALU.AND(o1b, x1c);
+        o1c: bool = ALU.OR(a1c, a2c);
 
-    
+        x1d: bool = ALU.XOR(A.T4.state, B.T4.state);
+        a1d: bool = ALU.AND(A.T4.state, B.T4.state);
+        x2d: bool = ALU.XOR(x1d, o1c);
+        a2d: bool = ALU.AND(o1c, x1d);
+        o1d: bool = ALU.OR(a1d, a2d);
 
-    byte Add1(byte A, byte B, bool carryIn) {
+        x1e: bool = ALU.XOR(A.T5.state, B.T5.state);
+        a1e: bool = ALU.AND(A.T5.state, B.T5.state);
+        x2e: bool = ALU.XOR(x1e, o1d);
+        a2e: bool = ALU.AND(o1d, x1e);
+        o1e: bool = ALU.OR(a1e, a2e);
 
-        bool x1 = XOR(A.T1.state, B.T1.state);
-        bool a1 = AND(A.T1.state, B.T1.state);
-        bool x2 = XOR(x1, carryIn);
-        bool a2 = AND(carryIn, x1);
-        bool o1 = OR(a1, a2);
-
-        byte returnedByte;
-
-        returnedByte.T1.state = x2;
-
-        return returnedByte;
-
-
-    }
-
-    byte Add2(byte A, byte B, bool carryIn) {
-
-        // CARRY = o1b
-        // SUM = x2b
-
-        bool x1a = XOR(A.T1.state, B.T1.state);
-        bool a1a = AND(A.T1.state, B.T1.state);
-        bool x2a = XOR(x1a, carryIn);
-        bool a2a = AND(carryIn, x1a);
-        bool o1a = OR(a1a, a2a);
-
-        bool x1b = XOR(A.T2.state, B.T2.state);
-        bool a1b = AND(A.T2.state, B.T2.state);
-        bool x2b = XOR(x1b, o1a);
-        bool a2b = AND(o1a, x1b);
-        bool o1b = OR(a1b, a2b);
-
-        byte returnedByte;
-
-        returnedByte.T1.state = x2a;
-        returnedByte.T2.state = x2b;
-        return returnedByte;
-
-    }
-
-    byte Add4(byte A, byte B, bool carryIn) {
-
-        // CARRY = o1d
-        // SUM = x2d
-
-        bool x1a = XOR(A.T1.state, B.T1.state);
-        bool a1a = AND(A.T1.state, B.T1.state);
-        bool x2a = XOR(x1a, carryIn);
-        bool a2a = AND(carryIn, x1a);
-        bool o1a = OR(a1a, a2a);
-
-        bool x1b = XOR(A.T2.state, B.T2.state);
-        bool a1b = AND(A.T2.state, B.T2.state);
-        bool x2b = XOR(x1b, o1a);
-        bool a2b = AND(o1a, x1b);
-        bool o1b = OR(a1b, a2b);
-
-        bool x1c = XOR(A.T3.state, B.T3.state);
-        bool a1c = AND(A.T3.state, B.T3.state);
-        bool x2c = XOR(x1c, o1b);
-        bool a2c = AND(o1b, x1c);
-        bool o1c = OR(a1c, a2c);
-
-        bool x1d = XOR(A.T4.state, B.T4.state);
-        bool a1d = AND(A.T4.state, B.T4.state);
-        bool x2d = XOR(x1d, o1c);
-        bool a2d = AND(o1c, x1d);
-        bool o1d = OR(a1d, a2d);
-
-        byte returnedByte;
-
-        returnedByte.T1.state = x2a;
-        returnedByte.T2.state = x2b;
-        returnedByte.T3.state = x2c;
-        returnedByte.T4.state = x2d;
-
-        return returnedByte;
-    }
-
-    byte Add8(byte A, byte B, bool carryIn) {
-
-        // CARRY = o1h
-        // SUM = x2h
-
-        bool x1a = XOR(A.T1.state, B.T1.state);
-        bool a1a = AND(A.T1.state, B.T1.state);
-        bool x2a = XOR(x1a, carryIn);
-        bool a2a = AND(carryIn, x1a);
-        bool o1a = OR(a1a, a2a);
-
-        bool x1b = XOR(A.T2.state, B.T2.state);
-        bool a1b = AND(A.T2.state, B.T2.state);
-        bool x2b = XOR(x1b, o1a);
-        bool a2b = AND(o1a, x1b);
-        bool o1b = OR(a1b, a2b);
-
-        bool x1c = XOR(A.T3.state, B.T3.state);
-        bool a1c = AND(A.T3.state, B.T3.state);
-        bool x2c = XOR(x1c, o1b);
-        bool a2c = AND(o1b, x1c);
-        bool o1c = OR(a1c, a2c);
-
-        bool x1d = XOR(A.T4.state, B.T4.state);
-        bool a1d = AND(A.T4.state, B.T4.state);
-        bool x2d = XOR(x1d, o1c);
-        bool a2d = AND(o1c, x1d);
-        bool o1d = OR(a1d, a2d);
-
-        bool x1e = XOR(A.T5.state, B.T5.state);
-        bool a1e = AND(A.T5.state, B.T5.state);
-        bool x2e = XOR(x1e, o1d);
-        bool a2e = AND(o1d, x1e);
-        bool o1e = OR(a1e, a2e);
-
-        bool x1f = XOR(A.T6.state, B.T6.state);
-        bool a1f = AND(A.T6.state, B.T6.state);
-        bool x2f = XOR(x1f, o1e);
-        bool a2f = AND(o1e, x1f);
-        bool o1f = OR(a1f, a2f);
-
-        bool x1g = XOR(A.T7.state, B.T7.state);
-        bool a1g = AND(A.T7.state, B.T7.state);
-        bool x2g = XOR(x1g, o1f);
-        bool a2g = AND(o1f, x1g);
-        bool o1g = OR(a1g, a2g);
-
-        bool x1h = XOR(A.T8.state, B.T8.state);
-        bool a1h = AND(A.T8.state, B.T8.state);
-        bool x2h = XOR(x1h, o1g);
-        bool a2h = AND(o1g, x1h);
-        bool o1h = OR(a1h, a2h);
-
-        if (o1h) {
-            printf("WARNING::ADD8BYTE_OVERFLOW.\n");
-        }
-
-        byte returnedByte;
-
-        returnedByte.T1.state = x2a;
-        returnedByte.T2.state = x2b;
-        returnedByte.T3.state = x2c;
-        returnedByte.T4.state = x2d;
-        returnedByte.T5.state = x2e;
-        returnedByte.T6.state = x2f;
-        returnedByte.T7.state = x2g;
-        returnedByte.T8.state = x2h;
-  
-        return returnedByte;
-
-    }
-
-    byte* Add16(byte A, byte B, bool carryIn) {
-
-        // CARRY = o1p
-        // SUM = x2p
-
-        bool x1a = XOR(A.T1.state, B.T1.state);
-        bool a1a = AND(A.T1.state, B.T1.state);
-        bool x2a = XOR(x1a, carryIn);
-        bool a2a = AND(carryIn, x1a);
-        bool o1a = OR(a1a, a2a);
-
-        bool x1b = XOR(A.T2.state, B.T2.state);
-        bool a1b = AND(A.T2.state, B.T2.state);
-        bool x2b = XOR(x1b, o1a);
-        bool a2b = AND(o1a, x1b);
-        bool o1b = OR(a1b, a2b);
-
-        bool x1c = XOR(A.T3.state, B.T3.state);
-        bool a1c = AND(A.T3.state, B.T3.state);
-        bool x2c = XOR(x1c, o1b);
-        bool a2c = AND(o1b, x1c);
-        bool o1c = OR(a1c, a2c);
-
-        bool x1d = XOR(A.T4.state, B.T4.state);
-        bool a1d = AND(A.T4.state, B.T4.state);
-        bool x2d = XOR(x1d, o1c);
-        bool a2d = AND(o1c, x1d);
-        bool o1d = OR(a1d, a2d);
-
-        bool x1e = XOR(A.T5.state, B.T5.state);
-        bool a1e = AND(A.T5.state, B.T5.state);
-        bool x2e = XOR(x1e, o1d);
-        bool a2e = AND(o1d, x1e);
-        bool o1e = OR(a1e, a2e);
-
-        bool x1f = XOR(A.T6.state, B.T6.state);
-        bool a1f = AND(A.T6.state, B.T6.state);
-        bool x2f = XOR(x1f, o1e);
-        bool a2f = AND(o1e, x1e);
-        bool o1f = OR(a1f, a2f);
+        x1f: bool = ALU.XOR(A.T6.state, B.T6.state);
+        a1f: bool = ALU.AND(A.T6.state, B.T6.state);
+        x2f: bool = ALU.XOR(x1f, o1e);
+        a2f: bool = ALU.AND(o1e, x1e);
+        o1f: bool = ALU.OR(a1f, a2f);
 
         bool x1g = XOR(A.T7.state, B.T7.state);
         bool a1g = AND(A.T7.state, B.T7.state);

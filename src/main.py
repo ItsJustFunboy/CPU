@@ -24,5 +24,5 @@ def main():
     b2.T7.state = 0
     b2.T8.state = 0
 
-    print(""+ str(ALU.byteToInt(ALU.Add2(b1, b2, 0))))
+    print("" + str(ALU.byteToInt(ALU.Add2(b1, b2, 0))))
 
