@@ -1,25 +1,34 @@
 ~ Example Program in the assembly language
 ~ Function: Swap two numbers, Num1 (=25) and Num2 (=50).
 
-__start
+~ Add variables
 
-    ~ Add variables: VBL type name address
+MOV 25, rag 
+MOV 50, rbg
+MOV 0, rcg
+VBL string, sRag, "25", 0x10800
+VBL string, sRbg, "50", 0x10804
+VBL string, sRcg, "0", 0x10808
 
-    VBL int, Num1, 0x400; ~ Num 1
-    VBL int, Num2, 0x432; ~ Num 2
-    VBL int, Num3, 0x474; ~ Extra number for swap
+VBL ptr, pRag, *rag, 0x1081B, 0
+VBL ptr, pRbg, *rbg, 0x1081F, 0
+VBL ptr, pRcg, *rcg, 0x10822, 0
 
-    ~ Initialize them: SET variable value
+~ Print initial values
 
-    SET Num1, 25;
-    SET Num2, 50;
-    SET Num3, 0;
+OUT &rdg
+OUT &reg
+OUT &rfg
 
-    ~ Print initial values
+~ Swap
 
-    OUT Num1;
-    OUT Num2;
+ASG &pRag, *pRcg ~ 25 to rcg
+ASG &pRbg, *pRag ~ 50 to old 25
+ASG &pRcg, *pRbg ~ new 25 to old 50
+ASG 0, &pRcg ~ 0 to rcg
 
-    ~ Swap
+~ Out
 
-    SET
+OUT &rag
+OUT &rbg
+OUT &rcg

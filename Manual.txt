@@ -3,26 +3,49 @@ CPU Manual.
 Section A: General Information
 
     File extension: .fsm ( Assembly )
+    File extension: .fo ( Compiled Assembly )
     File extension: .fl ( High Level Language )
+    File extension: .flo ( Compliled )
+
+    Some units are in Kibibytes. A Kibibyte is 1024 bytes, unlike a Kilobyte which is 1000.
 
     
 
 Section B: Memory
 
-    The CPU has 11 Memory locations.
+    The CPU has 13 Memory locations.
 
     Section B1: Main Memory
 
-        The RAM. Size: 64 KiB (-1B) ( Kibibytes, 64*1024-1 Bytes )
+        The RAM. Size: 64 KiB (-1B) ( Kibibytes, 64*1024 Bytes )
 
-            0x0000 .. 0x0400 (0-1 KiB) : System RAM, Video RAM
-            0x0400 .. 0x0800 (1-2 KiB) : Variable RAM
-            0x0800 .. 0xFFFF (2-64 KiB) : General Purpose RAM
+            0x10000 .. 0x10400 (0-1 KiB) : System RAM, Video RAM
+            0x10400 .. 0x10800 (1-2 KiB) : Special RAM, Purpose: TBD
+            0x10800 .. 0x1FFFF (2-64 KiB) : General Purpose RAM for variables, and other things
+
+            Note: All RAM locations are prefixed with a '1' in hex to distinguish. This does not mean it has 16x more space.
 
         The ROM. Size: 1 KiB ( Kibibytes, 1024 bytes, system only )
 
     Section B2: Registers
 
+        The CPU has 8 general purpose registers: 
+            rbg: 32-bit; Operand Reference ID: 0x60100
+            rcg: 32-bit; Operand Reference ID: 0x60200
+            rag: 32-bit; Operand Reference ID: 0x60300
+            rdg: 32-bit; Operand Reference ID: 0x60400
+            reg: 32-bit; Operand Reference ID: 0x60500
+            rfg: 32-bit; Operand Reference ID: 0x60600
+            rgg: 32-bit; Operand Reference ID: 0x60700
+            rhg: 32-bit; Operand Reference ID: 0x60800
+
+        The CPU also has the 3 special registers:
+            ACC: Accumulator (32-bit);
+            PCT: Program Counter (1 16-bit integer) (READ-ONLY)
+            MDR: Memory Data Register (Data at Memory hex of PCT)
+
+    EACH VARIABLE TAKES UP 4 BYTES, AND IS 32 BITS (Standard)
+        
 
 Section C: Assembly Language
 
@@ -32,39 +55,195 @@ Section C: Assembly Language
         0x0001: int ADDI {args: int, int, RegisterToStore} ~ Add ints
         0x0002: float ADDF {args: float, float, RegisterToStore} ~ Add floats
         0x0003: bool AND {args: bool A, bool B, RegisterToStore} ~ Logical AND
-        0x0004: void CALL {args: char[] funcName} ~ Call function
-        0x0005: void CMDR {args: None} ~ Clear Memory Data Register
-        0x0006: void CMAR {args: None} ~ Clears Memory Address Register
-        0x0007: void CAC {args: None}  ~ Clears Accumulator
-        0x0008: void CRAM {args: None} ~ Clears all RAM ( Not recommended, shuts down program )
-        0x0009: void RPC {args: None} ~ Reset program counter
-        0x000A: void CGR {args: Register} ~ Clears the specified General Purpose Register
-        0x000B: void VBL {args: string Type, string Name, Memory Address (0x0400 - 0x0800} ~ Declares Variable at location with type and its size. 
-        0x000C: void INCLUDE {args: <lib>, location} ~ Imports library
-        0x000D: bool EQL {args: bool A, bool B, RegisterToStore} ~ Checks if A==B
-        0x000E: bool LST {args: bool A, bool B, RegisterToStore} ~ Checks if A<B
-        0x000F: bool GRT {args: bool A, bool B, RegisterToStore} ~ Checks if A>B
-        0x0010: bool LSTE {args: bool A, bool B, RegisterToStore} ~ Checks if A<=B
-        0x0011: bool GRTE {args: bool A, bool B, RegisterToStore} ~ Checks if A>=B
-        0x0012: void HLT {args: None} ~ Halts the clock
-        0x0013: void RSC {args: None} ~ Stops clock Halt
-        0x0014: void SET {args: %variable, value} ~ Assigns variable with the value
-        0x0015: void JUMP {args: int lineNum} ~ Jumps to line
-        0x0016: void OUT {args: %variable} ~ stdout (variable.value)
-        0x0017: void FUNC {args: returnType, Name, }
+        0x0004: void FUNC {args: returnType, Name}
+        0x0005: void CALL {args: char[] funcName} ~ Call function
+        0x0006: void CMDR {args: None} ~ Clear Memory Data Register
+        0x0007: void CMAR {args: None} ~ Clears Memory Address Register
+        0x0008: void CAC {args: None}  ~ Clears Accumulator
+        0x0009: void CRAM {args: None} ~ Clears all RAM ( Not recommended, shuts down program )
+        0x000A: void RPC {args: None} ~ Reset program counter
+        0x000B: void CGR {args: Register} ~ Clears the specified General Purpose Register
+        0x000C: bool EQL {args: bool A, bool B, RegisterToStore} ~ Checks if A==B
+        0x000D: bool LST {args: bool A, bool B, RegisterToStore} ~ Checks if A<B
+        0x000E: bool GRT {args: bool A, bool B, RegisterToStore} ~ Checks if A>B
+        0x000F: bool LSTE {args: bool A, bool B, RegisterToStore} ~ Checks if A<=B
+        0x0010: bool GRTE {args: bool A, bool B, RegisterToStore} ~ Checks if A>=B
+        0x0011: void HLT {args: None} ~ Halts the clock
+        0x0012: void RSC {args: None} ~ Stops clock Halt
+        0x0013: void SET {args: %variable, value} ~ Assigns variable with the value
+        0x0014: void JUMP {args: int lineNum} ~ Jumps to line
+        0x0015: void JMPIZ {args: mathExpression, line num} ~ Jumps to line if the math expression is 0
+        0x0016: void OUT {args: &printedString} ~ stdout (string)
+        0x0017: string INP {args: RegisterToStore} ~ stdin 
+        0x0018: void MOV {args: RegisterOrData1, Register2} ~ Moves data to register
+        0x0019: void VBL {args: type, name, value, address, bool nullable} ~ Creates variable
+        0x001A: void ASG {args: value, address} ~ Assigns the value to &ptr
 
     Section C2: Libraries
 
-        <math.fsm> :
+        <math.fsm> : FILE <Assembly\STDLIB\math.fsm>
+        <string.fsm> : FILE <Assembly\STDLIB\string.fsm>
+        <memory.fsm> : FILE <Assembly\STDLIB\memory.fsm>
+        <loops.fsm> : FILE <Assembly\STDLIB\loops.fsp>
+
+        Note: The libraries are not yet meant to work and are not made, however later they will all be merged into the main instruction set
+
+    Section C3: Operators
+
+        '&' : Address of something
+        '*' : Pointer to something
+        '=' : Assignment
 
 
-    Section C3: Syntax
+    Section C4: Syntax
 
         Comments are declared with a '~'
         Variables are referenced with a '%'
-        Lines must end in a ';'
-
-        The program always has to start with an entry point, "__start"
+        Lines do not have end in a ';', but rather a line feed character ('\n')
 
         Example code to swap to integers, NumA, NumB: See FILE: <AssemblyExample.fsm>
 
+    Section C5: Data Types
+
+        char ~ Character
+        int ~ Integer
+        float ~ Floating Point Number (Decimal)
+        bool ~ Boolean
+        ptr ~ Pointer
+
+    Section C6: Code examples
+
+        Example code to swap 2 integers and print them: FILE <Examples\Assembly\>
+
+Section D: High level language 
+
+    ~ TODO ~
+
+Sectio0n E: Character set
+0
+    0x00000 : ' '
+    0x00100 : 'a'
+    0x00200 : 'b'
+    0x00300 : 'c'
+    0x00400 : 'd'
+    0x00500 : 'e'
+    0x00600 : 'f'
+    0x00700 : 'g'
+    0x00800 : 'h'
+    0x00900 : 'i'
+    0x00A00 : 'j'
+    0x00B00 : 'k'
+    0x00C00 : 'l'
+    0x00D00 : 'm'
+    0x00E00 : 'n'
+    0x00F00 : 'o'
+    0x01000 : 'p'
+    0x01100 : 'q'
+    0x01200 : 'r'
+    0x01300 : 's'
+    0x01400 : 't'
+    0x01500 : 'u'
+    0x01600 : 'v'
+    0x01700 : 'w'
+    0x01800 : 'x'
+    0x01900 : 'y'
+    0x01A00 : 'z'
+    0x01B00 : 'A'
+    0x01C00 : 'B'
+    0x01D00 : 'C'
+    0x01E00 : 'D'
+    0x01F00 : 'E'
+    0x02000 : 'F'
+    0x02100 : 'G'
+    0x02200 : 'H'
+    0x02300 : 'I'
+    0x02400 : 'J'
+    0x02500 : 'K'
+    0x02600 : 'L'
+    0x02700 : 'M'
+    0x02800 : 'N'
+    0x02900 : 'O'
+    0x02A00 : 'P'
+    0x02B00 : 'Q'
+    0x02C00 : 'R'
+    0x02D00 : 'S'
+    0x02E00 : 'T'
+    0x02F00 : 'U'
+    0x03000 : 'V'
+    0x03100 : 'W'
+    0x03200 : 'X'
+    0x03300 : 'Y'
+    0x03400 : 'Z'
+    0x03500 : '\0'
+    0x03600 : '\n'
+    0x03700 : ':'
+    0x03800 : ';'
+    0x03900 : '<'
+    0x03A00 : '>'
+    0x03B00 : '='
+    0x03C00 : '?'
+    0x03D00 : '!'
+    0x03E00 : '~'
+    0x03F00 : '['
+    0x04000 : ']'
+    0x04100 : '{'
+    0x04200 : '}'
+    0x04300 : '('
+    0x04400 : ')'
+    0x04500 : '-'
+    0x04600 : '+'
+    0x04700 : '*'
+    0x04800 : '^'
+    0x04900 : '&'
+    0x04A00 : '/'
+    0x04B00 : '\'
+    0x04C00 : '1'  
+    0x04D00 : '2'
+    0x04E00 : '3'
+    0x04F00 : '4'
+    0x05000 : '5'
+    0x05100 : '6'
+    0x05200 : '7'
+    0x05300 : '8'
+    0x05400 : '9'
+    0x05500 : '0'
+    0x05600 : '#'
+    0x05700 : '$'
+    0x05800 : '%'
+    0x05900 : '\''
+    0x05A00 : '\"'
+    0x05B00 : '.'
+    0x05C00 : ','
+    0x05D00 : '_'
+    0x05E00 : '='
+    0x05F00 : '|'
+    0x06000 : '@'
+    0x06100 : '{StartOfText}'
+    0x06200 : '{EndOfLine}'
+
+
+Section F: Data type prefixes (Compiled Code Only)
+
+    char: 
+        This is stored with a prefix of 0:
+            0x0{value}
+    memoryLocator:
+        This is stored with a prefix of 1:
+            0x1{value}
+    bool:
+        This has 2 values, and has a prefix of 2:
+            0x20000
+            0x20001
+    int: 
+        This is stored with a prefix of 3:
+            0x3{value}
+    float:
+         This is stored with the prefix of 4:
+            0x4{val1}.{val2} where both values have 2 nibbles each
+    ptr: 
+        This is stored with a prefix of 5:
+            0x5{value}
+    register:
+        This is stored with a prefix of 6:
+            0x6{value}
+    
