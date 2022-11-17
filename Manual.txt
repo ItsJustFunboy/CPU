@@ -250,5 +250,8 @@ Section F: Data type prefixes (Compiled Code Only)
     ptr (register):
         This is stored with a prefix of 7:
             0x7{value}
+    {command}: 
+        This is written with a prefix of C for the code runner:
+            0xC{value}
     
     THE END OF LINE CHARACTER IS DOES NOT NEED START OF TEXT CHARACTER
