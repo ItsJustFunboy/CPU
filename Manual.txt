@@ -30,14 +30,15 @@ Section B: Memory
     Section B2: Registers
 
         The CPU has 8 general purpose registers: 
-            rbg: 32-bit; Operand Reference ID: 0x60100
-            rcg: 32-bit; Operand Reference ID: 0x60200
-            rag: 32-bit; Operand Reference ID: 0x60300
-            rdg: 32-bit; Operand Reference ID: 0x60400
-            reg: 32-bit; Operand Reference ID: 0x60500
-            rfg: 32-bit; Operand Reference ID: 0x60600
-            rgg: 32-bit; Operand Reference ID: 0x60700
-            rhg: 32-bit; Operand Reference ID: 0x60800
+            rag: 32-bit; Operand Reference ID: 0x0000
+            rbg: 32-bit; Operand Reference ID: 0x0100
+            rcg: 32-bit; Operand Reference ID: 0x0200
+            rag: 32-bit; Operand Reference ID: 0x0300
+            rdg: 32-bit; Operand Reference ID: 0x0400
+            reg: 32-bit; Operand Reference ID: 0x0500
+            rfg: 32-bit; Operand Reference ID: 0x0600
+            rgg: 32-bit; Operand Reference ID: 0x0700
+            rhg: 32-bit; Operand Reference ID: 0x0800
 
         The CPU also has the 3 special registers:
             ACC: Accumulator (32-bit);
@@ -119,8 +120,8 @@ Section D: High level language
 
     ~ TODO ~
 
-Sectio0n E: Character set
-0
+Section E: Character set
+
     0x00000 : ' '
     0x00100 : 'a'
     0x00200 : 'b'
@@ -246,4 +247,8 @@ Section F: Data type prefixes (Compiled Code Only)
     register:
         This is stored with a prefix of 6:
             0x6{value}
+    ptr (register):
+        This is stored with a prefix of 7:
+            0x7{value}
     
+    THE END OF LINE CHARACTER IS DOES NOT NEED START OF TEXT CHARACTER
