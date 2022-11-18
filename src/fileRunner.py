@@ -35,6 +35,9 @@ def getContent(Name, Dir, Ext):
     if (checkForFile(name=Name, dir=Dir, extension=Ext)):
         return getText(Dir+Name)
 
+def replaceNewLines(string):
+    return string.replace("\n", " ")
+
 # Main Event Loop
 
 while True:
@@ -63,11 +66,23 @@ while True:
         print("Please input a valid file.")
         continue
 
-    for child in ARRcontent:
+    # Combine
+
+    content = ARRcontent[0]
+
+    for str in ARRcontent:
+        if str[0] == str:
+            continue;
+        else:
+            content = content + str
+
+    for child in content:
+        print(content)
         for char in child:
-            child.replace("\\n", " ")
+            print(content)
+            replaceNewLines(child)
 
-    print(content)
+    #print(content)
 
-    #TODO: FIX FOR LOOPS AND FINISH READING SYSTEM TODO#
+# /@CompiledAssemblyExample.fo to run the file
     

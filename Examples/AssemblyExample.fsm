@@ -6,15 +6,19 @@
 MOV 25, rag 
 MOV 50, rbg
 MOV 0, rcg
-VBL string, sRag, "25", 0x10800
-VBL string, sRbg, "50", 0x10804
-VBL string, sRcg, "0", 0x10808
+VBL string, sRag, "25", 0x20800
+VBL string, sRbg, "50", 0x20804
+VBL string, sRcg, "0", 0x20808
 
-VBL ptr, pRag, *rag, 0x1081B, 0
-VBL ptr, pRbg, *rbg, 0x1081F, 0
-VBL ptr, pRcg, *rcg, 0x10822, 0
+VBL ptr, pRag, *rag, 0x2081B
+VBL ptr, pRbg, *rbg, 0x2081F
+VBL ptr, pRcg, *rcg, 0x20822
 
 ~ Print initial values
+
+MOV sRag, rdg
+MOV sRbg, reg
+MOV sRcg, rfg
 
 OUT &rdg
 OUT &reg
@@ -23,8 +27,8 @@ OUT &rfg
 ~ Swap
 
 ASG &pRag, *pRcg ~ 25 to rcg
-ASG &pRbg, *pRag ~ 50 to old 25
-ASG &pRcg, *pRbg ~ new 25 to old 50
+ASG &pRbg, *pRag ~ 50 to rag
+ASG &pRcg, *pRbg ~ rcg to rbg
 ASG 0, &pRcg ~ 0 to rcg
 
 ~ Out
