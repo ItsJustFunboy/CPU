@@ -19,9 +19,9 @@ Section B: Memory
 
         The RAM. Size: 64 KiB ( Kibibytes, 64*1024 Bytes )
 
-            0x10000 .. 0x10400 (0-1 KiB) : System RAM, Video RAM
-            0x10400 .. 0x10800 (1-2 KiB) : Special RAM, Purpose: TBD
-            0x10800 .. 0x1FFFF (2-64 KiB) : General Purpose RAM for variables, and other things
+            0x10000 .. 0x1F7FF (0-62 KiB) : General Purpose RAM for variables, and other things
+            0x1F7FF .. 0x1FBFF (62-63 KiB) : System RAM, Video RAM
+            0x1FBFF .. 0x1FFFF (63-64 KiB) : Special RAM, Purpose: TBD
 
             Note: All RAM locations are prefixed with a '1' in hex to distinguish. This does not mean it has 16x more space.
 
@@ -50,7 +50,7 @@ Section B: Memory
 
 Section C: Assembly Language
 
-    Section C1: Insturctions
+    Section C1: Instructions
 
         0x00: void NINS {args: None} ~ No instruction
         0x01: int ADDI {args: int, int, RegisterToStore} ~ Add ints

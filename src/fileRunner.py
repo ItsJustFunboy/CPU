@@ -10,79 +10,121 @@ PATH = "D:\\CPU\\"
 BIN_PATH = "D:\\CPU\\usr_bin\\"
 CODE_PATH = "D:\\CPU\\usr_scripts"
 
-def getText(fileName):
+MEMORY = "D:\\CPU\\Memory\\RAM.mem"
+RAG = "D:\\CPU\\Memory\\RAG.mem"
+RBG = "D:\\CPU\\Memory\\RBG.mem"
+RCG = "D:\\CPU\\Memory\\RCG.mem"
+RDG = "D:\\CPU\\Memory\\RDG.mem"
+REG = "D:\\CPU\\Memory\\REG.mem"
+RFG = "D:\\CPU\\Memory\\RFG.mem"
+RGG = "D:\\CPU\\Memory\\RGG.mem"
+RHG = "D:\\CPU\\Memory\\RHG.mem"
+
+def getText(fileName: str):
     with open(fileName) as f:
         lines = f.readlines()
         return lines
 
+
 def loop():
-    
-    print(PATH+" ~ ")
-    content = input("$ ")
+
+    print(PATH + " ~ ")
+
+    cmd = input("$ ")
+
     print("")
-    return content
 
-def checkForFile(name, dir, extension):
-    files = os.listdir(dir)
+    return cmd
 
-    for file in files:
-        if (file == name) and (file.endswith(extension)):
+
+def checkForFile(name: str, directory: str, extension: str):
+    files = os.listdir(directory)
+
+    for File in files:
+        if (File == name) and (File.endswith(extension)):
             return True
 
     return False
 
-def getContent(Name, Dir, Ext):
-    if (checkForFile(name=Name, dir=Dir, extension=Ext)):
-        return getText(Dir+Name)
 
-def replaceNewLines(string):
-    return string.replace("\n", " ")
+def getContent(Name: str, Dir: str, Ext: str):
+    if checkForFile(name=Name, directory=Dir, extension=Ext):
+        return getText(Dir + Name)
 
+
+def replaceNewLines(inpt: str):
+    return inpt.replace("\n", " ")
+
+
+with open(MEMORY, "w") as file:
+    file.write("Hello, world!")
 # Main Event Loop
 
 while True:
-    
-    command = loop()
-    ARRcontent: str = None
+
+    Tcommand = loop()
+    ARRcontent: str or None = None
     content: str = ""
 
     # Command Detector
 
-    if command.startswith("/@"):
-        file = command.split("@")[1]
+    # Run
+
+    if Tcommand.startswith("os -r"):
+        file = Tcommand.split("-r ")[1]
         if file.endswith(".fo"):
-            ARRcontent = getContent(file, "D:\\CPU\\Examples\\", ".fo")#BIN_PATH)
+            print(Tcommand)
+            print(file)
+            ARRcontent = getContent(file, "D:\\CPU\\Examples\\", ".fo")  # BIN_PATH)
+            print(ARRcontent)
         elif file.endswith(".flo"):
-            ARRcontent = getContent(file, BIN_PATH, ".fo")
-        elif file.endswith(".fsm"):
-            ARRcontent = getContent(file, CODE_PATH, ".fo")
+            ARRcontent = getContent(file, BIN_PATH, ".flo")
+
+    # Compile
+
+    elif Tcommand.startswith("os -c"):
+        file = Tcommand.split("-c")[1]
+
+        if file.endswith(".fsm"):
+            ARRcontent = getContent(file, CODE_PATH, ".fsm")
         elif file.endswith(".fl"):
-            ARRcontent = getContent(file, CODE_PATH, ".fo")
+            ARRcontent = getContent(file, CODE_PATH, ".fl")
+    # Help menu
+
+    elif Tcommand.startswith("os -h"):
+        print(
+            """
+            OS Commands help
+            
+                os -h: Brings up this menu
+                os -r: Runs selected file
+                os -c: Compiles selected file 
+        
+            """
+              )
     else:
         print("Command not found.\n")
         continue
-    
-    if ARRcontent == None:
+
+    if ARRcontent is None:
         print("Please input a valid file.")
         continue
 
     # Combine
-
     content = ARRcontent[0]
 
-    for str in ARRcontent:
-        if str[0] == str:
-            continue;
-        else:
-            content = content + str
+    for string in ARRcontent:
+        content = content + string
 
-    for child in content:
-        print(content)
-        for char in child:
-            print(content)
-            replaceNewLines(child)
+    del ARRcontent
+    del Tcommand
 
-    #print(content)
+    commands = None
+    continuousContent = None
 
-# /@CompiledAssemblyExample.fo to run the file
-    
+    for cmds in content:
+        continuousContent = continuousContent + content.replace('\n', ' ')
+
+    print(continuousContent)
+
+# os -r CompiledAssemblyExample.fo to run the file
